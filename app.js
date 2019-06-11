@@ -5,6 +5,7 @@ let logger = require('morgan');
 let cors = require('cors');
 
 let uploadRouter = require('./routes/users');
+let indexRouter = require('./routes/index');
 
 let app = express();
 
@@ -15,5 +16,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use('/upload', uploadRouter);
+app.use('/', indexRouter);
 
 module.exports = app;
