@@ -44,7 +44,7 @@ function splitEnglishAndFrench(annonces) {
   let fillFrench = true;
   for (let i = 0; i < annonces.length; i++) {
     let line = annonces[i];
-    if (line.split(':')[0].toLowerCase() === "announcements") {
+    if (line.split(':')[0].toLowerCase().trim() === "announcements" || line.split(':')[0].toLowerCase().trim() === "anouncements") {
       fillFrench = false;
     }
 
@@ -68,10 +68,12 @@ function announcementContent(announcement) {
     let line = announcement[i].toLowerCase().trim();
 
     if (exclusions.includes(line)) continue;
-
-    if (line.split(':')[0].substring(0, 5) === "thème" || line.split(':')[0].substring(0, 5) === "the p") {
+    if (line.indexOf("thème prophétique") !== -1 || line.indexOf("le thème prophétique") !== -1 || line.indexOf("the prophetic theme") !== -1) {
       annonceContent.themeTitle = line.split(':')[0];
       annonceContent.theme = line.split(':')[1] + line.split(':')[2];
+      if(annonceContent.theme === "undefined") {
+        annonceContent.theme = announcement[i + 1];
+      }
     }
 
     if (line.trim() !== "" && annonceContentMode === true) {
