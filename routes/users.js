@@ -19,21 +19,16 @@ router.post('/', (req, res, next) => {
         annContent.push(announcementContent(a[1]))
       });
 
-      if (annContent[0].content.length !== annContent[1].content.length) {
-        res.status(400);
-        res.json("Le nombre d'annonces en Français est différent de celui en Anglais");
-      } else {
-        pptService.genPPT(annContent, (buffer) => {
-          dropboxService.uploadToDropbox(buffer)
-            .then(_ => {
-              res.json("L'annonce a été uploadée sur le dropbox avec succès")
-            })
-            .catch(err => {
-              console.error(err);
-              res.json("Une erreur est survenue lors de l'upload sur le dropbox");
-            });
-        });
-      }
+      pptService.genPPT(annContent, (buffer) => {
+        dropboxService.uploadToDropbox(buffer)
+          .then(_ => {
+            res.json("L'annonce a été uploadée sur le dropbox avec succès")
+          })
+          .catch(err => {
+            console.error(err);
+            res.json("Une erreur est survenue lors de l'upload sur le dropbox");
+          });
+      });
     }
   })
 });
@@ -44,7 +39,7 @@ function splitEnglishAndFrench(annonces) {
   let fillFrench = true;
   for (let i = 0; i < annonces.length; i++) {
     let line = annonces[i];
-    if (line.split(':')[0].toLowerCase().trim() === "announcements" || line.split(':')[0].toLowerCase().trim() === "anouncements") {
+    if (line.toLowerCase().trim().indexOf("the prophetic theme") !== -1) {
       fillFrench = false;
     }
 
@@ -70,7 +65,7 @@ function announcementContent(announcement) {
     if (exclusions.includes(line)) continue;
     if (line.indexOf("thème prophétique") !== -1 || line.indexOf("le thème prophétique") !== -1 || line.indexOf("the prophetic theme") !== -1) {
       annonceContent.themeTitle = line.split(':')[0];
-      annonceContent.theme = line.split(':')[1] + line.split(':')[2];
+      annonceContent.theme = line.split(':')[1] + ":" + line.split(':')[2];
       if(annonceContent.theme === "undefined") {
         annonceContent.theme = announcement[i + 1];
       }
@@ -78,7 +73,15 @@ function announcementContent(announcement) {
 
     if (line.trim() !== "" && annonceContentMode === true) {
       if (annonceContent.content === undefined) annonceContent.content = [];
-      annonceContent.content.push(line);
+      if(i == 0) {
+        annonceContent.content.push(line);
+      } else {
+        if(announcement[i - 1].trim() === "") {
+          annonceContent.content.push(line);
+        } else {
+          annonceContent.content[annonceContent.content.length - 1] += line; 
+        }
+      }
     }
 
     if (line.indexOf("aujourd'hui est notre") !== -1 || line.indexOf("today is our") !== -1) {
@@ -91,7 +94,6 @@ function announcementContent(announcement) {
 }
 
 const exclusions = [
-  "jesus-christ is lord!",
   "chapelle des vanqueurs internationale paris"
 ];
 

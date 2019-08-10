@@ -3,6 +3,7 @@ let fetch = require('isomorphic-fetch');
 let fs = require('fs');
 let path = require('path');
 let moment = require('moment');
+moment.locale('fr');
 
 const announcementsFolder = "/Winner Chapel Paris/Annonces/Annonces ppt/2019";
 

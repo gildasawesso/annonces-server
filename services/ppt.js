@@ -1,6 +1,7 @@
 let pptgenerator = require("pptxgenjs");
 let path = require('path');
 let moment = require('moment');
+let officegen = require('officegen');
 
 async function buildpowerpoint(announcement, cb) {
   let pptx = new pptgenerator();
@@ -77,8 +78,22 @@ function addOpening(pptx) {
 
 function addAnnoncementsContent(ann, pptx) {
   for (let i = 0; i < ann[0].content.length; i++) {
-    let frAnnounce = ann[0].content[i];
-    let enAnnounce = ann[1].content[i];
+    const regex = /\*.*?\*/g;
+    let frAnnounce;
+    let enAnnounce;
+    try {
+      frAnnounce = ann[0].content[i].match(regex).toString().replace(/\*/g, '');
+    } catch (e) {
+      frAnnounce = "";
+    }
+
+    try {
+      enAnnounce = ann[1].content[i].match(regex).toString().replace(/\*/g, '');
+    } catch (e) {
+      enAnnounce = "";
+    }
+
+
 
     let slide = pptx.addNewSlide("MASTER_CONTENT");
     slide.addText("", specificOptions.frTitleOptions);
@@ -171,14 +186,13 @@ const generalOptions = {
       color: '000000',
       alpha: 40
     },
-    // isTextBox: true,
-    // shrinkText: true,
+    autoFit: true,
     rectRadius: 128
   }
 };
 
 const themOptions = {
-  fontSize: 28,
+  fontSize: 48,
   // ...generalOptions.common
   align: 'center',
   fill: {
@@ -189,7 +203,8 @@ const themOptions = {
   isTextBox: true,
   shrinkText: true,
   rectRadius: 2,
-  lineSpacing: 40
+  // lineSpacing: 40
+  lineSpacing: 130
 };
 
 const specificOptions = {
@@ -215,4 +230,33 @@ const specificOptions = {
   }
 };
 
+
+//officegen
+
+function buildPPT() {
+  let pptx = officegen('pptx');
+
+  pptx.on('finalize', function(written) {
+    console.log(
+      'Finish to create a Microsoft PowerPoint document.'
+    )
+  })
+  
+  // Officegen calling this function to report errors:
+  pptx.on('error', function(err) {
+    console.log(err)
+  })
+
+}
+
+function addSlide(text, options) {
+
+}
+
+function addText() {
+  
+}
+
+
+exports.build = buildPPT;
 exports.genPPT = buildpowerpoint;
