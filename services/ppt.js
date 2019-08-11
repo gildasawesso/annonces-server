@@ -40,8 +40,8 @@ function addTheme(ann, pptx) {
     align: 'center'
   });
 
-  slide.addText(ann[0].theme, {x: 0.26, y: 1.77, w: 6.21, h: 5.43, color: generalOptions.color.fr, ...themOptions});
-  slide.addText(ann[0].theme, {x: 6.77, y: 1.77, w: 6.21, h: 5.43, color: generalOptions.color.en, ...themOptions});
+  slide.addText(ann[0].theme, { x: 0.26, y: 1.77, w: 6.21, h: 5.43, color: generalOptions.color.fr, ...themOptions });
+  slide.addText(ann[0].theme, { x: 6.77, y: 1.77, w: 6.21, h: 5.43, color: generalOptions.color.en, ...themOptions });
 }
 
 function addToday(ann, pptx) {
@@ -98,13 +98,13 @@ function addAnnoncementsContent(ann, pptx) {
     let slide = pptx.addNewSlide("MASTER_CONTENT");
     slide.addText("", specificOptions.frTitleOptions);
     slide.addText("", specificOptions.enTitleOptions);
-    slide.addText(frAnnounce, {...specificOptions.frContentOptions,fontSize: computeFontSize(frAnnounce), lineSpacing: Math.round(computeFontSize(frAnnounce) * 1.5)});
-    slide.addText(enAnnounce, {...specificOptions.enContentOptions, fontSize: computeFontSize(enAnnounce), lineSpacing: Math.round(computeFontSize(enAnnounce) * 1.5)});
+    slide.addText(frAnnounce, { ...specificOptions.frContentOptions, fontSize: computeFontSize(frAnnounce)});
+    slide.addText(enAnnounce, { ...specificOptions.enContentOptions, fontSize: computeFontSize(enAnnounce)});
   }
 }
 
 function computeFontSize(line) {
-  if(line === undefined) return 36;
+  if (line === undefined) return 36;
   let words = line.split(' ');
   let wordsNumber = words.length;
   switch (true) {
@@ -118,7 +118,7 @@ function computeFontSize(line) {
       return 47;
 
 
-      //parfait
+    //parfait
     case wordsNumber <= 30:
       return 36;
     case wordsNumber <= 35:
@@ -133,7 +133,7 @@ function computeFontSize(line) {
     case wordsNumber <= 50:
       return 29;
 
-      //A ne plus toucher c'est parfait
+    //A ne plus toucher c'est parfait
     case wordsNumber <= 60:
       return 28;
     case wordsNumber <= 65:
@@ -156,17 +156,17 @@ function computeFontSize(line) {
 function configureMasterSlide(pptx) {
   let slideMasterOptions = {
     title: 'MASTER',
-    bkgd: {path: `${path.resolve()}/services/bg1.jpeg`}
+    bkgd: { path: `${path.resolve()}/services/bg1.jpeg` }
   };
 
   let contentSlideMasterOptions = {
     title: 'MASTER_CONTENT',
-    bkgd: {path: `${path.resolve()}/services/bg1.jpeg`},
+    bkgd: { path: `${path.resolve()}/services/bg1.jpeg` },
     objects: [
-      {'placeholder': {options: {name: 'frTitle', type: 'body', x: 0.08, y: 0.12, w: 6.52, h: 0.75}}},
-      {'placeholder': {options: {name: 'enTitle', type: 'body', x: 6.74, y: 0.12, w: 6.52, h: 0.75}}},
-      {'placeholder': {options: {name: 'frContent', type: 'body', x: 0.08, y: 1.06, w: 6.52, h: 6.44}}},
-      {'placeholder': {options: {name: 'enContent', type: 'body', x: 6.74, y: 1.06, w: 6.52, h: 6.44}}}
+      { 'placeholder': { options: { name: 'frTitle', type: 'body', x: 0.08, y: 0.12, w: 6.52, h: 0.75 } } },
+      { 'placeholder': { options: { name: 'enTitle', type: 'body', x: 6.74, y: 0.12, w: 6.52, h: 0.75 } } },
+      { 'placeholder': { options: { name: 'frContent', type: 'body', x: 0.08, y: 1.06, w: 6.52, h: 6.44 } } },
+      { 'placeholder': { options: { name: 'enContent', type: 'body', x: 6.74, y: 1.06, w: 6.52, h: 6.44 } } }
     ]
   };
   pptx.defineSlideMaster(slideMasterOptions);
@@ -179,6 +179,7 @@ const generalOptions = {
     en: 'FF9800'
   },
   common: {
+    fontSize: 54,
     color: 'ffffff',
     align: 'center',
     fill: {
@@ -186,14 +187,15 @@ const generalOptions = {
       color: '000000',
       alpha: 40
     },
-    autoFit: true,
-    rectRadius: 128
+    isTextBox: true,
+    shrinkText: true,
+    rectRadius: 2,
+    lineSpacing: 80
   }
 };
 
 const themOptions = {
   fontSize: 48,
-  // ...generalOptions.common
   align: 'center',
   fill: {
     type: 'solid',
@@ -203,7 +205,6 @@ const themOptions = {
   isTextBox: true,
   shrinkText: true,
   rectRadius: 2,
-  // lineSpacing: 40
   lineSpacing: 130
 };
 
@@ -236,14 +237,14 @@ const specificOptions = {
 function buildPPT() {
   let pptx = officegen('pptx');
 
-  pptx.on('finalize', function(written) {
+  pptx.on('finalize', function (written) {
     console.log(
       'Finish to create a Microsoft PowerPoint document.'
     )
   })
-  
+
   // Officegen calling this function to report errors:
-  pptx.on('error', function(err) {
+  pptx.on('error', function (err) {
     console.log(err)
   })
 
@@ -254,7 +255,7 @@ function addSlide(text, options) {
 }
 
 function addText() {
-  
+
 }
 
 
