@@ -10,7 +10,7 @@
     "cors": "^2.8.5",
     "debug": "~2.6.9",
     "dropbox": "^4.0.26",
-    "express": "~4.16.1",
+    "express": "~4.18.2",
     "isomorphic-fetch": "^2.2.1",
     "moment": "^2.24.0",
     "morgan": "~1.9.1",
